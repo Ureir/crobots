@@ -11,6 +11,7 @@
 
 /* screen.c - low level screen display routines */
 /*	      change or modify this module for different systems */
+/* this is the DOS/BIOS interrupt call version */
 
 
 #include <stdio.h>
@@ -259,9 +260,9 @@ int n;
   int i, k;
   register int new_x, new_y;
 
-  new_x = (int) (((long)((missiles[r][n].cur_x+(CLICK/2)) / CLICK) 
+  new_x = (int) (((long)((missiles[r][n].cur_x+(CLICK/2)) / CLICK)
 		  * f_width) / MAX_X);
-  new_y = (int) (((long)((missiles[r][n].cur_y+(CLICK/2)) / CLICK) 
+  new_y = (int) (((long)((missiles[r][n].cur_y+(CLICK/2)) / CLICK)
 		  * f_height) / MAX_Y);
   /* add one to x and y for playfield offset in screen, and inverse y */
   new_x++;
@@ -334,9 +335,9 @@ int n;
     else
       return;  /* continue to display explosion */
 
-  hold_x = (int) (((long)((missiles[r][n].cur_x+(CLICK/2)) / CLICK) 
+  hold_x = (int) (((long)((missiles[r][n].cur_x+(CLICK/2)) / CLICK)
 		   * f_width) / MAX_X);
-  hold_y = (int) (((long)((missiles[r][n].cur_y+(CLICK/2)) / CLICK) 
+  hold_y = (int) (((long)((missiles[r][n].cur_y+(CLICK/2)) / CLICK)
                    * f_height) / MAX_Y);
 
   for (c = 0; c < 9; c++) {

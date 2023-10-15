@@ -11,28 +11,30 @@
 
 /* screena.c - low level screen display routines */
 /*	      change or modify this module for different systems */
-
+/* this is the ANSI ESCape sequences versions */
 
 #include <stdio.h>
 #include "crobots.h"
+#include "screen.h"
+
+static void draw_field(void);
 
 
 #define COLS  80
 #define LINES 25
-clear()
+static void clear(void)
 {
   printf("\033[H\033[2J");
 }
 
-move(y,x)
-int y,x;
+static void move(int y, int x)
 {
   printf("\033[%d;%dH",y,x);
 }
 
 /* dummy refresh function */
 
-refresh() {}
+static void refresh(void) {}
 
 #ifdef LATTICE
 /* use lattice's console i/o routines instead of stdio */
@@ -46,7 +48,7 @@ refresh() {}
 
 /* init_disp - initialize display */
 
-init_disp()
+void init_disp(void)
 {
   clear();
   draw_field();
@@ -55,7 +57,7 @@ init_disp()
 
 /* end_disp - cleanup and end display */
 
-end_disp() {}
+void end_disp(void) {}
 
 
 /* playfield characters */
@@ -107,7 +109,7 @@ static int col_3;    /* column for cpu cycle count*/
 
 /* draw_field - draws the playing field and status boxes */
 
-draw_field()
+static void draw_field(void)
 {
   int i, j;
 
@@ -174,9 +176,7 @@ draw_field()
 
 /* plot_robot - plot the robot position */
 
-plot_robot(n)
-
-int n;
+void plot_robot(int n)
 {
   int i, k;
   register int new_x, new_y;
@@ -216,17 +216,14 @@ int n;
 
 /* plot_miss - plot the missile position */
 
-plot_miss(r,n)
-
-int r;
-int n;
+void plot_miss(int r, int n)
 {
   int i, k;
   register int new_x, new_y;
 
-  new_x = (int) (((long)((missiles[r][n].cur_x+(CLICK/2)) / CLICK) 
+  new_x = (int) (((long)((missiles[r][n].cur_x+(CLICK/2)) / CLICK)
 		  * f_width) / MAX_X);
-  new_y = (int) (((long)((missiles[r][n].cur_y+(CLICK/2)) / CLICK) 
+  new_y = (int) (((long)((missiles[r][n].cur_y+(CLICK/2)) / CLICK)
 		  * f_height) / MAX_Y);
   /* add one to x and y for playfield offset in screen, and inverse y */
   new_x += 2;
@@ -264,10 +261,7 @@ int n;
 
 /* plot_exp - plot the missile exploding */
 
-plot_exp(r,n)
-
-int r;
-int n;
+void plot_exp(int r, int n)
 {
   int c, i, p, hold_x, hold_y, k;
   register int new_x, new_y;
@@ -299,9 +293,9 @@ int n;
     else
       return;  /* continue to display explosion */
 
-  hold_x = (int) (((long)((missiles[r][n].cur_x+(CLICK/2)) / CLICK) 
+  hold_x = (int) (((long)((missiles[r][n].cur_x+(CLICK/2)) / CLICK)
 		   * f_width) / MAX_X);
-  hold_y = (int) (((long)((missiles[r][n].cur_y+(CLICK/2)) / CLICK) 
+  hold_y = (int) (((long)((missiles[r][n].cur_y+(CLICK/2)) / CLICK)
                    * f_height) / MAX_Y);
 
   for (c = 0; c < 9; c++) {
@@ -334,9 +328,7 @@ int n;
 
 /* robot_stat - update status info */
 
-robot_stat(n)
-
-int n;
+void robot_stat(int n)
 {
   int changed = 0;
 
@@ -377,9 +369,7 @@ int n;
 }
 
 
-show_cycle(l)
-
-long l;
+void show_cycle(long l)
 {
   move(LINES,col_3);
   printw("%7ld",l);

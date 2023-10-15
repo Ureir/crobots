@@ -155,22 +155,22 @@ int r_debug,			/* debug switch */
 #define DIRECT_RANGE 5
 #define NEAR_RANGE   20
 #define FAR_RANGE    40
-  
+
 /* declare the intrinsic functions, all must push a long value on the stack */
 /* these functions don't return a long, but declared long for notation */
-long c_scan();    /* scan(degree,res);  >0 = robot distance, 0 = nothing */
-long c_cannon();  /* cannon(degree,dist); fire cannon */
-long c_drive();   /* drive(degree,speed); speed 0-100 in % */
-long c_damage();  /* damage(); = current damage in % */
-long c_speed();   /* speed(); = current speed */ 
-long c_loc_x();   /* loc_x(); = current x location */
-long c_loc_y();   /* loc_y(); = current y location */
-long c_rand();    /* rand(limit); = 0 -- limit (2**15)-1 */
-long c_sin();     /* sin(degree); = sin * 100000 */
-long c_cos();     /* cos(degree); = cos * 100000 */
-long c_tan();     /* tan(degree); = tan * 100000 */
-long c_atan();    /* atan(ratio); = degree */
-long c_sqrt();    /* sqrt(x); = square root */
+void c_scan(void);    /* scan(degree,res);  >0 = robot distance, 0 = nothing */
+void c_cannon(void);  /* cannon(degree,dist); fire cannon */
+void c_drive(void);   /* drive(degree,speed); speed 0-100 in % */
+void c_damage(void);  /* damage(); = current damage in % */
+void c_speed(void);   /* speed(); = current speed */
+void c_loc_x(void);   /* loc_x(); = current x location */
+void c_loc_y(void);   /* loc_y(); = current y location */
+void c_rand(void);    /* rand(limit); = 0 -- limit (2**15)-1 */
+void c_sin(void);     /* sin(degree); = sin * 100000 */
+void c_cos(void);     /* cos(degree); = cos * 100000 */
+void c_tan(void);     /* tan(degree); = tan * 100000 */
+void c_atan(void);    /* atan(ratio); = degree */
+void c_sqrt(void);    /* sqrt(x); = square root */
 
 /* declare instrinsic function table */
 #ifndef INIT
@@ -178,12 +178,12 @@ extern
 #endif
 struct intrin {
   char *n;
-  long (*f)();
+  void (*f)(void);
 } intrinsics[20]
 
 #ifdef INIT
  = {
-  {"*dummy*",	(long (*)()) 0},
+  {"*dummy*",	(void (*)()) 0},
   {"scan",	c_scan},
   {"cannon",	c_cannon},
   {"drive",	c_drive},
@@ -197,9 +197,14 @@ struct intrin {
   {"tan",	c_tan},
   {"atan",	c_atan},
   {"sqrt",	c_sqrt},
-  {"",		(long (*)()) 0} 
+  {"",		(void (*)()) 0}
  }
 #endif
 ;
+
+/* prototypes of cpu functions */
+void robot_go(struct robot *r);
+
+/* motion.c */
 
 /* end of crobots.h header */

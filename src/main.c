@@ -13,10 +13,18 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* INIT causes externals in crobots.h to have storage, & init intrinsic table */
-#define INIT 1 
+#define INIT 1
 #include "crobots.h"
+#undef INIT
+#include "compiler.h"
+#include "display.h"
+#include "screen.h"
+#include "cpu.h"
+#include "motion.h"
 
 #ifdef UNIX
 #include <signal.h>
@@ -33,10 +41,17 @@ FILE *f_out;
 char *version   = "CROBOTS - version 1.1, December, 1985\n";
 char *copyright = "Copyright 1985 by Tom Poindexter, All rights reserved.\n";
 
+/* internal functions, by call order */
+static void init_robot(int i);
+static void comp(char *f[], int n);
+static void trace(char *f);
+static void match(int m, long l, char *f[], int n);
+static void play(char *f[], int n);
+static void free_robot(int i);
+static void rand_pos(int n);
 
-main(argc,argv)
-int argc;
-char *argv[];
+
+int main(int argc, char *argv[])
 {
   long limit = CYCLE_LIMIT;
   int matches = 0;
@@ -51,7 +66,9 @@ char *argv[];
   long time();
   long atol();
   long cur_time;
-  int srand();
+  extern FILE *yyin, *yyout;
+
+  yyin = stdin; yyout = stdout;
 
 
   /* print version, copyright notice, GPL notice */
@@ -90,7 +107,7 @@ char *argv[];
     if (argv[i][0] == '-') {
 
       switch (argv[i][1]) {
-       
+
 	/* limit number of cycles in a match */
 	case 'l':
 	case 'L':
@@ -102,7 +119,7 @@ char *argv[];
         case 'M':
 	  matches = atoi((argv[i])+2);
 	  break;
-	   
+
 	/* compile only flag */
         case 'c':
         case 'C':
@@ -137,13 +154,13 @@ char *argv[];
 	fprintf(stderr,"%s: extra robot source `%s' ignored\n",prog,argv[i]);
       }
     }
-	
+
   }
 
   /* make sure there is at least one robot at this point */
   if (num_robots == 0) {
     fprintf(stderr,"%s: no robot source files\n",prog);
-    exit(1);
+    return (1);
   }
 
   /* now, figure out what to do */
@@ -152,7 +169,7 @@ char *argv[];
   if (comp_only) {
     comp(files,num_robots);
   }
-  else 
+  else
 
     /* debug the first robot listed */
     if (debug_only) {
@@ -181,19 +198,16 @@ char *argv[];
 	}
 	play(files,num_robots);
       }
-	
-  /* all done */ 
-  exit(0);
+
+  /* all done */
+  return (0);
 
 }
 
 
 /* comp - only compile the files with full info */
 
-comp(f,n)
-
-char *f[];
-int n;
+static void comp(char *f[], int n)
 {
   int i;
 
@@ -228,10 +242,7 @@ int n;
 
 /* play - watch the robots compete */
 
-play(f,n)
-
-char *f[];
-int n;
+static void play(char *f[], int n)
 {
   int num_robots = 0;
   int robotsleft;
@@ -309,9 +320,9 @@ int n;
 	robotsleft++;
         cur_robot = &robots[i];
 	cycle();
-      } 
+      }
     }
-    
+
     /* is it time to update motion? */
     if (--movement <= 0) {
       movement = MOTION_CYCLES;
@@ -341,8 +352,8 @@ int n;
       move_robots(1);
       move_miss(1);
       update_disp();
-    } 
-    else  
+    }
+    else
       break;
   }
 
@@ -370,12 +381,7 @@ int n;
 
 /* match - run a series of matches */
 
-match(m,l,f,n)
-
-int m;
-long l;
-char *f[];
-int n;
+static void match(int m, long l, char *f[], int n)
 {
   int num_robots = 0;
   int robotsleft;
@@ -457,7 +463,7 @@ int n;
 	  robotsleft++;
 	  cur_robot = &robots[i];
 	  cycle();
-	} 
+	}
       }
       if (--movement == 0) {
 	c += MOTION_CYCLES;
@@ -490,8 +496,8 @@ int n;
       if (k) {
 	move_robots(0);
 	move_miss(0);
-      } 
-      else  
+      }
+      else
 	break;
     }
 
@@ -544,9 +550,7 @@ int n;
 /*           dependent on MAXROBOTS <= 4 */
 /*            put robots in separate quadrant */
 
-rand_pos(n)
-
-int n;
+static void rand_pos(int n)
 {
   int i, k;
   int quad[4];
@@ -558,7 +562,7 @@ int n;
   /* get a new quadrant */
   for (i = 0; i < n; i++) {
     k = rand() % 4;
-    if (quad[k] == 0) 
+    if (quad[k] == 0)
       quad[k] = 1;
     else {
       while (quad[k] != 0) {
@@ -567,9 +571,9 @@ int n;
       }
       quad[k] = 1;
     }
-    robots[i].org_x = robots[i].x = 
+    robots[i].org_x = robots[i].x =
        (rand() % (MAX_X * CLICK / 2)) + ((MAX_X * CLICK / 2) * (k%2));
-    robots[i].org_y = robots[i].y = 
+    robots[i].org_y = robots[i].y =
        (rand() % (MAX_Y * CLICK / 2)) + ((MAX_Y * CLICK / 2) * (k<2));
   }
 }
@@ -578,11 +582,9 @@ int n;
 
 /* trace - compile and run the robot in debug mode */
 
-trace(f)
-
-char *f;
+static void trace(char *f)
 {
-  int c = 1; 
+  int c = 1;
 
   r_debug = 1; /* turns on debugging in cpu */
   f_in = fopen(f,"r");
@@ -614,9 +616,9 @@ char *f;
 
   cur_robot = &robots[0];
 
-  fprintf("\n\nReady to debug, use `d' to dump robot info, `q' to quit.\n\n");
+  printf("\n\nReady to debug, use `d' to dump robot info, `q' to quit.\n\n");
 
-  while (c) {  
+  while (c) {
     cycle();
 
     /* r_flag set by hitting 'q' in cycle()'s debug mode */
@@ -632,9 +634,7 @@ char *f;
 
 
 /* init a robot */
-init_robot(i)
-
-int i;
+static void init_robot(int i)
 {
   register int j;
 
@@ -669,9 +669,7 @@ int i;
 
 /* free_robot - frees any allocated storage in a robot */
 
-free_robot(i) 
-
-int i;
+static void free_robot(int i)
 {
   struct func *temp;
 
@@ -702,7 +700,7 @@ int i;
 catch_int()
 {
   int i;
-/* 
+/*
   for (i = 0; i < MAXROBOTS; i++) {
     cur_robot = &robots[i];
       printf("\nrobot: %d",i);

@@ -4,20 +4,24 @@
 	<Project>
 		<Option title="crobots" />
 		<Option pch_mode="2" />
+		<Option default_target="Release" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/crobots" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="rabbit.r counter.r rook.r sniper.r" />
 				<Compiler>
 					<Add option="-Og" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/crobots" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/CROBOTS" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -53,6 +57,7 @@
 		<Unit filename="src/cpu.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/cpu.h" />
 		<Unit filename="src/cr-demo.bat" />
 		<Unit filename="src/cr-print.bat" />
 		<Unit filename="src/cr-read.me" />
@@ -61,21 +66,18 @@
 		<Unit filename="src/display.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/display.h" />
 		<Unit filename="src/grammar.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/grammar.y">
-			<Option compile="1" />
-		</Unit>
+		<Unit filename="src/grammar.y" />
 		<Unit filename="src/intrins.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/lexanal.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/lexanal.l">
-			<Option compile="1" />
-		</Unit>
+		<Unit filename="src/lexanal.l" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -85,16 +87,22 @@
 		<Unit filename="src/motion.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/motion.h" />
 		<Unit filename="src/rabbit.r" />
 		<Unit filename="src/rook.r" />
 		<Unit filename="src/screen.c">
 			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
 		</Unit>
+		<Unit filename="src/screen.h" />
 		<Unit filename="src/screena.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/screend.c">
 			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
 		</Unit>
 		<Unit filename="src/sniper.r" />
 		<Unit filename="src/target.r" />

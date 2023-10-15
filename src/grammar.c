@@ -11,6 +11,7 @@
 /*****************************************************************************/
 
 #include <stdio.h>
+#include <string.h>
 #include "crobots.h"
 #include "compiler.h"
 
@@ -253,11 +254,11 @@ int yychar = -1; /* current input token number */
 int yynerrs = 0;  /* number of errors */
 short yyerrflag = 0;  /* error recovery flag */
 
-yyparse() {
+int yyparse(void)
+{
 
 	short yys[YYMAXDEPTH];
 	short yyj, yym;
-	register YYSTYPE *yypvt;
 	register short yystate, *yyps, yyn;
 	register YYSTYPE *yypv;
 	register short *yyxi;
@@ -317,7 +318,6 @@ yyparse() {
 		case 0:   /* brand new error */
 
 			yyerror( "syntax error" );
-		yyerrlab:
 			++yynerrs;
 
 		case 1:
@@ -364,7 +364,6 @@ yyparse() {
 
 		if( yydebug ) printf("reduce %d\n",yyn);
 		yyps -= yyr2[yyn];
-		yypvt = yypv;
 		yypv -= yyr2[yyn];
 		yyval = yypv[1];
 		yym=yyn;
@@ -373,10 +372,10 @@ yyparse() {
 		yyj = yypgo[yyn] + *yyps + 1;
 		if( yyj>=YYLAST || yychk[ yystate = yyact[yyj] ] != -yyn ) yystate = yyact[yypgo[yyn]];
 		switch(yym){
-			
+
 case 1:
 { /* printf("IDENTIFIER\n"); */
-		if ((work = findvar(last_ident,var_tab)) == -1)
+		if ((work = findvar(last_ident,var_tab)) == -1) {
 		  if ((work = findvar(last_ident,ext_tab)) == -1) {
 		    if (findvar(last_ident,func_tab) == -1) {
 		      /* printf("\n***undeclared %s***\n",last_ident); */
@@ -386,6 +385,7 @@ case 1:
 		  }
 		  else
 		    work |= EXTERNAL;
+		}
 		if (!efetch(work))
 		  return(1);
 		} break;
@@ -422,12 +422,13 @@ case 7:
 		postfix++;
 		if (!econst(1L))
 		  return(1);
-		if ((work = findvar(last_ident,var_tab)) == -1)
+		if ((work = findvar(last_ident,var_tab)) == -1) {
 		  if ((work = findvar(last_ident,ext_tab)) == -1) {
 		    work = allocvar(last_ident,var_tab);
 		  }
 		  else
 		    work |= EXTERNAL;
+		}
 		if(!estore(work,ADD_ASSIGN))
 		  return(1);
 		} break;
@@ -437,12 +438,13 @@ case 8:
 		postfix++;
 		if (!econst(1L))
 		  return(1);
-		if ((work = findvar(last_ident,var_tab)) == -1)
+		if ((work = findvar(last_ident,var_tab)) == -1) {
 		  if ((work = findvar(last_ident,ext_tab)) == -1) {
 		    work = allocvar(last_ident,var_tab);
 		  }
 		  else
 		    work |= EXTERNAL;
+		}
 		if (!estore(work,SUB_ASSIGN))
 		  return(1);
 		} break;
@@ -456,12 +458,13 @@ case 13:
 { /* printf("INFIX-INC\n"); */
 		if (!econst(1L))
 		  return(1);
-		if ((work = findvar(last_ident,var_tab)) == -1)
+		if ((work = findvar(last_ident,var_tab)) == -1) {
 		  if ((work = findvar(last_ident,ext_tab)) == -1) {
 		    work = allocvar(last_ident,var_tab);
 		  }
 		  else
 		    work |= EXTERNAL;
+		}
 		if (!estore(work,ADD_ASSIGN))
 		  return(1);
 		} break;
@@ -469,12 +472,13 @@ case 14:
 { /* printf("INFIX-DEC\n"); */
 		if (!econst(1L))
 		  return(1);
-		if ((work = findvar(last_ident,var_tab)) == -1)
+		if ((work = findvar(last_ident,var_tab)) == -1) {
 		  if ((work = findvar(last_ident,ext_tab)) == -1) {
 		    work = allocvar(last_ident,var_tab);
 		  }
 		  else
 		    work |= EXTERNAL;
+		}
 		if (!estore(work,SUB_ASSIGN))
 		  return(1);
 		} break;
@@ -506,12 +510,12 @@ case 16:
 		*(op_stack + op_off) = '-';
 		} break;
 case 17:
-{ 
+{
 		op_off++;
 		*(op_stack + op_off) = '!';
 		} break;
 case 18:
-{ 
+{
 		op_off++;
 		*(op_stack + op_off) = '~';
 		} break;
@@ -609,12 +613,13 @@ case 51:
 { /* printf("ASSIGNMENT\n"); */
 		/* func_ident used as temp storage */
 		popid(func_ident,var_stack,&var_off); /* note ptr to off */
-		if ((work = findvar(func_ident,var_tab)) == -1)
+		if ((work = findvar(func_ident,var_tab)) == -1) {
 		  if ((work = findvar(func_ident,ext_tab)) == -1) {
 		    work = allocvar(func_ident,var_tab);
 		  }
 		  else
 		    work |= EXTERNAL;
+		}
 		if (!estore(work,*(op_stack + op_off)))
 		  return(1);
 		op_off--;
