@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="crobots" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/crobots" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Og" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/crobots" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-fomit-frame-pointer" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-flto" />
+					<Add option="-O3" />
+				</Compiler>
+				<Linker>
+					<Add option="-flto" />
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-pedantic" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="docs/COUNTER.R.html" />
+		<Unit filename="docs/RABBIT.R.html" />
+		<Unit filename="docs/ROOK.R.html" />
+		<Unit filename="docs/SNIPER.R.html" />
+		<Unit filename="docs/compass.png" />
+		<Unit filename="docs/crobots_manual.html" />
+		<Unit filename="docs/display.png" />
+		<Unit filename="src/compiler.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/compiler.h" />
+		<Unit filename="src/counter.r" />
+		<Unit filename="src/cpu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cr-demo.bat" />
+		<Unit filename="src/cr-print.bat" />
+		<Unit filename="src/cr-read.me" />
+		<Unit filename="src/crobots.doc" />
+		<Unit filename="src/crobots.h" />
+		<Unit filename="src/display.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/grammar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/grammar.y">
+			<Option compile="1" />
+		</Unit>
+		<Unit filename="src/intrins.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/lexanal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/lexanal.l">
+			<Option compile="1" />
+		</Unit>
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/makecbot.bat" />
+		<Unit filename="src/makefile.unx" />
+		<Unit filename="src/makeshar.bat" />
+		<Unit filename="src/motion.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/rabbit.r" />
+		<Unit filename="src/rook.r" />
+		<Unit filename="src/screen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/screena.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/screend.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/sniper.r" />
+		<Unit filename="src/target.r" />
+		<Unit filename="src/tokens.h" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
